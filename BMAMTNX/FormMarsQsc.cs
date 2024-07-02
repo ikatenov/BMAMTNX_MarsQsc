@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,32 +17,41 @@ namespace BMAMTNX
     {
         public event EventHandler<DataEnteredEventArgs>? DataEntered;
 
-        private readonly iGButtonColumnManager BCM = new iGButtonColumnManager();
+        private readonly iGButtonColumnManager BCM = new();
 
-        private int NumMeters;
+        private readonly int NumMeters;
         private int NumMetersConfirmed = 0;
+
+        private iGDropDownList UnitsOfMeasureDDL;
 
         public FormMarsQsc(int numMeters)
         {
             NumMeters = numMeters;
             InitializeComponent();
-            InitializeGrid(numMeters);
+            InitializeGrid();
         }
 
-        private void InitializeGrid(int numMeters)
+        private void InitializeGrid()
         {
+            UnitsOfMeasureDDL = new iGDropDownList();
+            var ddlItems = typeof(eUnitsOfMeasure).GetEnumValuesWithDescription<eUnitsOfMeasure>();
+            foreach (var item in ddlItems)
+                UnitsOfMeasureDDL.Items.Add(item.Key, item.Value);
+
             iGrid1.BeginUpdate();
 
             iGCol col;
             col = iGrid1.Cols.Add("sn", "SN");
             col = iGrid1.Cols.Add("start", "STARTING READING");
             col = iGrid1.Cols.Add("end", "ENDING READING");
+            col = iGrid1.Cols.Add("unit", "UNIT OF MEASURE");
+            col.CellStyle.DropDownControl = UnitsOfMeasureDDL;
             col = iGrid1.Cols.Add("valid", "VALID");
             col.DefaultCellValue = "Confirm";
             col.Tag = iGButtonColumnManager.BUTTON_COLUMN_TAG;
             iGrid1.Cols.AutoWidth();
 
-            iGrid1.Rows.Count = numMeters;
+            iGrid1.Rows.Count = NumMeters;
 
             iGrid1.EndUpdate();
 
@@ -64,13 +74,30 @@ namespace BMAMTNX
         }
     }
 
-    #region Data & Event Definitions
+    #region Type Definitions
+
+    public enum eUnitsOfMeasure
+    {
+        [Description("GALLON")]
+        GAL,
+        [Description("FT3")]
+        M3,
+        [Description("M3")]
+        LITERS,
+        [Description("LITER")]
+        FT3,
+        [Description("IMPERIAL GAL")]
+        IGAL,
+        [Description("ACRE FEET")]
+        ACRE_FT
+    }
 
     public class MarsQscMeter
     {
         public string? SN;
         public float StartingReading;
         public float EndingReading;
+        public eUnitsOfMeasure UnitsOfMeasure;
     }
 
     public class DataEnteredEventArgs : EventArgs
@@ -79,6 +106,40 @@ namespace BMAMTNX
         public DataEnteredEventArgs()
         {
             Data = Array.Empty<MarsQscMeter>();
+        }
+    }
+
+    #endregion
+
+    #region Helper stuff
+
+    // Helper class with extension methods to get enum values with their descriptions.
+    // Source: https://stackoverflow.com/a/16888620/1651480
+    public static class EnumExtender
+    {
+        public static string GetDescription(this Enum enumValue)
+        {
+            string output = null;
+            Type type = enumValue.GetType();
+            FieldInfo fi = type.GetField(enumValue.ToString());
+            var attrs = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+            if (attrs.Length > 0) output = attrs[0].Description;
+            return output;
+        }
+
+        public static IDictionary<T, string> GetEnumValuesWithDescription<T>(this Type type) where T : struct, IConvertible
+        {
+            if (!type.IsEnum)
+            {
+                throw new ArgumentException("T must be an enumerated type");
+            }
+
+            return type.GetEnumValues()
+                    .OfType<T>()
+                    .ToDictionary(
+                        key => key,
+                        val => (val as Enum).GetDescription()
+                    );
         }
     }
 
