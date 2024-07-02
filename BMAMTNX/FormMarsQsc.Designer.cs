@@ -57,6 +57,7 @@
             Controls.Add(iGrid1);
             Name = "FormMarsQsc";
             Text = "MarsQsc";
+            FormClosed += FormMarsQsc_FormClosed;
             ((System.ComponentModel.ISupportInitialize)iGrid1).EndInit();
             ResumeLayout(false);
         }

@@ -102,7 +102,13 @@ namespace BMAMTNX
             }
         }
 
+        private void FormMarsQsc_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            UnitsOfMeasureDDL.Dispose();
+        }
+
         private const int CP_NOCLOSE_BUTTON = 0x200;
+
         protected override CreateParams CreateParams
         {
             get
