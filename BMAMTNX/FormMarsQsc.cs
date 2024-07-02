@@ -101,6 +101,17 @@ namespace BMAMTNX
                 #endregion
             }
         }
+
+        private const int CP_NOCLOSE_BUTTON = 0x200;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle = cp.ClassStyle | CP_NOCLOSE_BUTTON;
+                return cp;
+            }
+        }
     }
 
     #region Type Definitions
