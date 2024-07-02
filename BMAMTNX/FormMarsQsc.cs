@@ -42,16 +42,26 @@ namespace BMAMTNX
 
             iGCol col;
             col = iGrid1.Cols.Add("sn", "SN");
+            col.CellStyle.ValueType = typeof(string);
             col = iGrid1.Cols.Add("start", "STARTING READING");
+            col.CellStyle.ValueType = typeof(float);
+            col.CellStyle.TextAlign = iGContentAlignment.MiddleRight;
+            col.DefaultCellValue = 0f;
             col = iGrid1.Cols.Add("end", "ENDING READING");
+            col.CellStyle.ValueType = typeof(float);
+            col.CellStyle.TextAlign = iGContentAlignment.MiddleRight;
+            col.DefaultCellValue = 0f;
             col = iGrid1.Cols.Add("unit", "UNIT OF MEASURE");
             col.CellStyle.DropDownControl = UnitsOfMeasureDDL;
+            col.DefaultCellValue = eUnitsOfMeasure.GAL;
             col = iGrid1.Cols.Add("valid", "VALID");
             col.DefaultCellValue = "Confirm";
             col.Tag = iGButtonColumnManager.BUTTON_COLUMN_TAG;
             iGrid1.Cols.AutoWidth();
 
             iGrid1.Rows.Count = NumMeters;
+
+            iGrid1.SetCurCell(0, 0);
 
             iGrid1.EndUpdate();
 
@@ -62,14 +72,29 @@ namespace BMAMTNX
         private void BCM_CellButtonClick(object sender, iGButtonColumnManager.iGCellButtonClickEventArgs e)
         {
             NumMetersConfirmed++;
-            if (NumMetersConfirmed == NumMeters)
+            if (NumMetersConfirmed < NumMeters)
             {
-                this.Close();
-                DataEntered?.Invoke(this, new DataEnteredEventArgs());
+                #region Only disable the clicked button
+                iGrid1.Cells[e.RowIndex, e.ColIndex].Enabled = iGBool.False;
+                #endregion
             }
             else
             {
-                iGrid1.Cells[e.RowIndex, e.ColIndex].Enabled = iGBool.False;
+                #region Pass the entered data in the DataEntered event and close the form
+                MarsQscMeter[] data = new MarsQscMeter[NumMeters];
+                for (int i = 0; i < NumMeters; i++)
+                {
+                    data[i] = new MarsQscMeter()
+                    {
+                        SN = (string)iGrid1.CellValues[i, "sn"],
+                        StartingReading = (float)iGrid1.CellValues[i, "start"],
+                        EndingReading = (float)iGrid1.CellValues[i, "end"],
+                        UnitsOfMeasure = (eUnitsOfMeasure)iGrid1.CellValues[i, "unit"]
+                    };
+                }
+                this.Close();
+                DataEntered?.Invoke(this, new DataEnteredEventArgs(data));
+                #endregion
             }
         }
     }
@@ -103,9 +128,9 @@ namespace BMAMTNX
     public class DataEnteredEventArgs : EventArgs
     {
         public MarsQscMeter[] Data { get; }
-        public DataEnteredEventArgs()
+        public DataEnteredEventArgs(MarsQscMeter[] data)
         {
-            Data = Array.Empty<MarsQscMeter>();
+            Data = data;
         }
     }
 
