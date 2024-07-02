@@ -40,6 +40,11 @@ namespace BMAMTNX
 
             iGrid1.BeginUpdate();
 
+            int colWidth = 100;
+            if (this.DeviceDpi > 96)
+                colWidth = colWidth * this.DeviceDpi / 96;
+            iGrid1.DefaultCol.Width = colWidth;
+
             iGCol col;
             col = iGrid1.Cols.Add("sn", "SN");
             col.CellStyle.ValueType = typeof(string);
@@ -57,7 +62,6 @@ namespace BMAMTNX
             col = iGrid1.Cols.Add("valid", "VALID");
             col.DefaultCellValue = "Confirm";
             col.Tag = iGButtonColumnManager.BUTTON_COLUMN_TAG;
-            iGrid1.Cols.AutoWidth();
 
             iGrid1.Rows.Count = NumMeters;
 

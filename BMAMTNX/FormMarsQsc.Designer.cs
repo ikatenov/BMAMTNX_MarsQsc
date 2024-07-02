@@ -38,19 +38,22 @@
             // iGrid1
             // 
             iGrid1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            iGrid1.DefaultAutoGroupRow.Height = 38;
             iGrid1.DefaultCol.CellStyle = iGrid1DefaultCellStyle;
             iGrid1.DefaultCol.ColHdrStyle = iGrid1DefaultColHdrStyle;
+            iGrid1.DefaultRow.Height = 38;
+            iGrid1.DefaultRow.NormalCellHeight = 38;
             iGrid1.Header.Height = 35;
             iGrid1.Location = new Point(12, 12);
             iGrid1.Name = "iGrid1";
-            iGrid1.Size = new Size(776, 426);
+            iGrid1.Size = new Size(1365, 574);
             iGrid1.TabIndex = 0;
             // 
             // FormMarsQsc
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1389, 598);
             Controls.Add(iGrid1);
             Name = "FormMarsQsc";
             Text = "MarsQsc";
