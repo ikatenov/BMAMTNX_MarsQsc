@@ -52,6 +52,8 @@ namespace BMAMTNX
             iGrid1.Header.BackColor = Color.FromArgb(240, 240, 240);
             iGrid1.DefaultCol.ColHdrStyle.TextAlign = iGContentAlignment.MiddleCenter;
 
+            iGrid1.HScrollBar.Visibility = iGScrollBarVisibility.Hide;
+
             iGCol col;
             col = iGrid1.Cols.Add("sn", "SN");
             col.CellStyle.ValueType = typeof(string);
