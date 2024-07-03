@@ -15,6 +15,8 @@ namespace BMAMTNX
 {
     public partial class FormMarsQsc : Form
     {
+        private const int COLUMN_WIDTH = 150;
+
         public event EventHandler<DataEnteredEventArgs>? DataEntered;
 
         private readonly iGButtonColumnManager BCM = new();
@@ -40,10 +42,11 @@ namespace BMAMTNX
 
             iGrid1.BeginUpdate();
 
-            int colWidth = 100;
+            int colWidth = COLUMN_WIDTH;
             if (this.DeviceDpi > 96)
                 colWidth = colWidth * this.DeviceDpi / 96;
             iGrid1.DefaultCol.Width = colWidth;
+            iGrid1.DefaultCol.AllowSizing = false;
 
             iGCol col;
             col = iGrid1.Cols.Add("sn", "SN");
