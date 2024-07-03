@@ -46,16 +46,20 @@
             iGrid1.Header.Height = 35;
             iGrid1.Location = new Point(12, 12);
             iGrid1.Name = "iGrid1";
-            iGrid1.Size = new Size(1365, 574);
+            iGrid1.Size = new Size(1590, 574);
             iGrid1.TabIndex = 0;
             // 
             // FormMarsQsc
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1389, 598);
+            ClientSize = new Size(1614, 598);
             Controls.Add(iGrid1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "FormMarsQsc";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "MarsQsc";
             FormClosed += FormMarsQsc_FormClosed;
             ((System.ComponentModel.ISupportInitialize)iGrid1).EndInit();
