@@ -48,6 +48,10 @@ namespace BMAMTNX
             iGrid1.DefaultCol.Width = colWidth;
             iGrid1.DefaultCol.AllowSizing = false;
 
+            iGrid1.Header.Font = new Font(iGrid1.Font.FontFamily, 10, FontStyle.Bold);
+            iGrid1.Header.BackColor = Color.FromArgb(240, 240, 240);
+            iGrid1.DefaultCol.ColHdrStyle.TextAlign = iGContentAlignment.MiddleCenter;
+
             iGCol col;
             col = iGrid1.Cols.Add("sn", "SN");
             col.CellStyle.ValueType = typeof(string);

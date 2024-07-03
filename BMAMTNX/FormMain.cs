@@ -11,7 +11,7 @@ namespace BMAMTNX
 
         private void ButtonStartTest_Click(object sender, EventArgs e)
         {
-            int NumMeters = 5;
+            int NumMeters = 2;
             formMarsQsc = new FormMarsQsc(NumMeters);
             formMarsQsc.DataEntered += FormMarsQsc_DataEntered;
             formMarsQsc.Show();
