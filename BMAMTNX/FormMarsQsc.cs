@@ -47,6 +47,7 @@ namespace BMAMTNX
                 colWidth = colWidth * this.DeviceDpi / 96;
             iGrid1.DefaultCol.Width = colWidth;
             iGrid1.DefaultCol.AllowSizing = false;
+            iGrid1.DefaultCol.SortType = iGSortType.None;
 
             iGrid1.Header.Font = new Font(iGrid1.Font.FontFamily, 10, FontStyle.Bold);
             iGrid1.Header.BackColor = Color.FromArgb(240, 240, 240);
