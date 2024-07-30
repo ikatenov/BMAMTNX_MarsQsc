@@ -21,19 +21,33 @@ namespace BMAMTNX
 
         private readonly iGButtonColumnManager BCM = new();
 
-        private readonly int NumMeters;
+        private int NumMeters;
         private int NumMetersConfirmed = 0;
 
         private iGDropDownList UnitsOfMeasureDDL;
 
-        public FormMarsQsc(int numMeters)
+        public FormMarsQsc()
         {
-            NumMeters = numMeters;
             InitializeComponent();
-            InitializeGrid();
         }
 
-        private void InitializeGrid()
+        public void Show(string title, int numMeters)
+        {
+            this.Text = title;
+            NumMeters = numMeters;
+            InitializeGrid(null);
+            this.Show();
+        }
+
+        public void Show(string title, MarsQscMeter[] data)
+        {
+            this.Text = title;
+            NumMeters = data.Length;
+            InitializeGrid(data);
+            this.Show();
+        }
+
+        private void InitializeGrid(MarsQscMeter[]? data)
         {
             UnitsOfMeasureDDL = new iGDropDownList();
             var ddlItems = typeof(eUnitsOfMeasure).GetEnumValuesWithDescription<eUnitsOfMeasure>();
@@ -68,6 +82,7 @@ namespace BMAMTNX
             col.DefaultCellValue = 0f;
             col = iGrid1.Cols.Add("unit", "UNIT OF MEASURE");
             col.CellStyle.DropDownControl = UnitsOfMeasureDDL;
+            col.CellStyle.TypeFlags = iGCellTypeFlags.NoTextEdit;
             col.DefaultCellValue = eUnitsOfMeasure.GAL;
             col = iGrid1.Cols.Add("valid", "VALID");
             col.DefaultCellValue = "Confirm";
@@ -75,7 +90,21 @@ namespace BMAMTNX
 
             iGrid1.Rows.Count = NumMeters;
 
-            iGrid1.SetCurCell(0, 0);
+            if (data == null)
+            {
+                iGrid1.SetCurCell(0, 0);
+            }
+            else
+            {
+                iGrid1.Cols["sn"].CellStyle.Selectable = iGBool.False;
+                iGrid1.Cols["unit"].CellStyle.Selectable = iGBool.False;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    iGrid1.CellValues[i, "sn"] = data[i].SN;
+                    iGrid1.CellValues[i, "unit"] = data[i].UnitsOfMeasure;
+                }
+                iGrid1.SetCurCell(0, "start");
+            }
 
             iGrid1.EndUpdate();
 
